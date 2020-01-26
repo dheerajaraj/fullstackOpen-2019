@@ -16,6 +16,12 @@ const Content = props => {
       <p>
         {props.contentName} {props.exercise}
       </p>
+      <p>
+        {props.contentName} {props.exercise2}
+      </p>
+      <p>
+        {props.contentName} {props.exercise3}
+      </p>
     </div>
   );
 };
@@ -42,9 +48,13 @@ function AppPart1() {
   return (
     <div>
       <Header course={course} />
-      <Content contentName={part1} exercise={exercises1} />
-      <Content contentName={part2} exercise={exercises2} />
-      <Content contentName={part3} exercise={exercises3} />
+      <Content
+        contentName={part1}
+        exercise={exercises1}
+        exercise2={exercises2}
+        exercise3={exercises3}
+      />
+
       <Total
         exercises1={exercises1}
         exercises2={exercises2}
