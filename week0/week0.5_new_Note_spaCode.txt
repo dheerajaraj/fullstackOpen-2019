@@ -1,0 +1,12 @@
+#Exercise 0.5 Creating a SPA. 
+Title: Loading the page of spa (single page app) version
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa
+Server-->Browser: SPA HTML code
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+Server-->Browser: main.css
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/spa.js
+Server-->Browser: spa.js
+Note over Browser: The browser excutes the js code that requests JSON data from the server
+Browser->Server: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+Server-->Browser: data.json is returned 
+Note over Browser: The browser tiggers the event handler that displays the notes. 

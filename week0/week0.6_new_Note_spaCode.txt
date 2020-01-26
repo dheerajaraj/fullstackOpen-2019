@@ -1,0 +1,8 @@
+title post data spa
+note over browser: spa.js creates new note "hello world" and adds it to the notes list. 
+note over browser: spa.js sends a JSON request of the updated notes list.
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+note over browser: 
+sent new list of notes is updated in data.json in server side. 
+end note
+server->browser: Status code: 201 Created
