@@ -6,27 +6,31 @@ function AppPart1() {
   const [feedback, setFeedBack] = useState({
     good: 0,
     neutral: 0,
-    bad: 0
+    bad: 0,
+    all: 0
   });
 
   const handleGoodFeedBack = () => {
     setFeedBack({
       ...feedback,
-      good: feedback.good + 1
+      good: feedback.good + 1,
+      all: feedback.all + 1
     });
   };
 
   const handleNeutralFeedBack = () => {
     setFeedBack({
       ...feedback,
-      neutral: feedback.neutral + 1
+      neutral: feedback.neutral + 1,
+      all: feedback.all + 1
     });
   };
 
   const handleBadFeedBack = () => {
     setFeedBack({
       ...feedback,
-      bad: feedback.bad + 1
+      bad: feedback.bad + 1,
+      all: feedback.all + 1
     });
   };
 
@@ -39,6 +43,8 @@ function AppPart1() {
       {props.feedBackName} {props.feedBackCount}
     </p>
   );
+  const average = (feedback.good - feedback.bad) / feedback.all;
+  const positivePercentage = (feedback.good / feedback.all) * 100 + " %";
   return (
     <div>
       <h1> give feedback </h1>
@@ -49,6 +55,12 @@ function AppPart1() {
       <DisplayState feedBackName="good" feedBackCount={feedback.good} />
       <DisplayState feedBackName="neutral" feedBackCount={feedback.neutral} />
       <DisplayState feedBackName="bad" feedBackCount={feedback.bad} />
+      <DisplayState feedBackName="all" feedBackCount={feedback.all} />
+      <DisplayState feedBackName="average" feedBackCount={average} />
+      <DisplayState
+        feedBackName="positive"
+        feedBackCount={positivePercentage}
+      />
     </div>
   );
 }
