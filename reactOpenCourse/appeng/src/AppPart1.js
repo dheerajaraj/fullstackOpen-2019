@@ -38,13 +38,8 @@ function AppPart1() {
     <button onClick={props.triggeredFeedBack}>{props.text}</button>
   );
 
-  const DisplayState = props => (
-    <p>
-      {props.feedBackName} {props.feedBackCount}
-    </p>
-  );
   const Statistics = props => {
-    if (feedback.all === 0) {
+    if (feedback.all === 0 && props.feedBackName === "") {
       return (
         <div>
           <p>"No feedback given"</p>
@@ -53,8 +48,9 @@ function AppPart1() {
     }
     return (
       <div>
-        <p>{props.feedBackAveragePoints}</p>
-        <p>{props.positiveFeedBackPercentage}</p>
+        <p>
+          {props.feedBackName} {props.feedBackCount}
+        </p>
       </div>
     );
   };
@@ -68,14 +64,12 @@ function AppPart1() {
       <Button triggeredFeedBack={handleNeutralFeedBack} text="neutral" />
       <Button triggeredFeedBack={handleBadFeedBack} text="bad" />
       <h1> statistics </h1>
-      <DisplayState feedBackName="good" feedBackCount={feedback.good} />
-      <DisplayState feedBackName="neutral" feedBackCount={feedback.neutral} />
-      <DisplayState feedBackName="bad" feedBackCount={feedback.bad} />
-      <DisplayState feedBackName="all" feedBackCount={feedback.all} />
-      <Statistics
-        feedBackAveragePoints={average}
-        positiveFeedBackPercentage={positivePercentage}
-      />
+      <Statistics feedBackName="good" feedBackCount={feedback.good} />
+      <Statistics feedBackName="neutral" feedBackCount={feedback.neutral} />
+      <Statistics feedBackName="bad" feedBackCount={feedback.bad} />
+      <Statistics feedBackName="all" feedBackCount={feedback.all} />
+      <Statistics feedBackName="" feedBackCount={average} />
+      <Statistics feedBackName="" feedBackCount={positivePercentage} />
     </div>
   );
 }
