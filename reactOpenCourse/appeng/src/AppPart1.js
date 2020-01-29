@@ -43,6 +43,13 @@ function AppPart1() {
       {props.feedBackName} {props.feedBackCount}
     </p>
   );
+  const Statistics = props => (
+    <div>
+      <p>{props.feedBackAveragePoints}</p>
+      <p>{props.positiveFeedBackPercentage}</p>
+    </div>
+  );
+
   const average = (feedback.good - feedback.bad) / feedback.all;
   const positivePercentage = (feedback.good / feedback.all) * 100 + " %";
   return (
@@ -56,10 +63,9 @@ function AppPart1() {
       <DisplayState feedBackName="neutral" feedBackCount={feedback.neutral} />
       <DisplayState feedBackName="bad" feedBackCount={feedback.bad} />
       <DisplayState feedBackName="all" feedBackCount={feedback.all} />
-      <DisplayState feedBackName="average" feedBackCount={average} />
-      <DisplayState
-        feedBackName="positive"
-        feedBackCount={positivePercentage}
+      <Statistics
+        feedBackAveragePoints={average}
+        positiveFeedBackPercentage={positivePercentage}
       />
     </div>
   );
