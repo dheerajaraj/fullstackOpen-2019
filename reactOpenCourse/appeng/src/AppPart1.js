@@ -43,12 +43,21 @@ function AppPart1() {
       {props.feedBackName} {props.feedBackCount}
     </p>
   );
-  const Statistics = props => (
-    <div>
-      <p>{props.feedBackAveragePoints}</p>
-      <p>{props.positiveFeedBackPercentage}</p>
-    </div>
-  );
+  const Statistics = props => {
+    if (feedback.all === 0) {
+      return (
+        <div>
+          <p>"No feedback given"</p>
+        </div>
+      );
+    }
+    return (
+      <div>
+        <p>{props.feedBackAveragePoints}</p>
+        <p>{props.positiveFeedBackPercentage}</p>
+      </div>
+    );
+  };
 
   const average = (feedback.good - feedback.bad) / feedback.all;
   const positivePercentage = (feedback.good / feedback.all) * 100 + " %";
