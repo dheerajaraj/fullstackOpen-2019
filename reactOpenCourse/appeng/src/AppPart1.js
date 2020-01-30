@@ -11,15 +11,26 @@ const anecdotes = [
 
 const AppPart1 = props => {
   const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
+  const updateVote = () => {
+    var newVote = [...votes];
+    newVote[selected] += 1;
+    setVotes(newVote);
+  };
   const generateRandom = () => {
-    const newSelected = Math.round(Math.random() * anecdotes.length);
+    const newSelected = Math.round(Math.random() * (anecdotes.length - 1));
     setSelected(newSelected);
   };
+  const Button = ({ onClick, text }) => (
+    <button onClick={onClick}>{text}</button>
+  );
 
   return (
     <div>
-      <button onClick={generateRandom}>random</button>
       {anecdotes[selected]}
+      <p>has {votes[selected]} votes</p>
+      <Button onClick={generateRandom} text="next anecdote" />
+      <Button onClick={updateVote} text="vote" />
     </div>
   );
 };
