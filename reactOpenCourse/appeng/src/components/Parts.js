@@ -13,10 +13,14 @@ class Parts extends Component {
     ) {
       return { exercises: total.exercises + currVal.exercises }; // need to be field of same name
     });
+
     return (
       <div>
-        {result}
-        <p>total of {totalResult.exercises} exercises</p>
+        <h1>{this.props.course.name}</h1>
+        <ul>
+          {result}
+          <p>Total of {totalResult.exercises} exercises</p>
+        </ul>
       </div>
     );
   }
