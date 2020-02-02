@@ -1,56 +1,33 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import Parts from "./components/Parts";
+import Numbers from "./components/Numbers";
 const AppPart1 = () => {
-  const courses = [
-    {
-      name: "Half Stack application development",
-      id: 1,
-      parts: [
-        {
-          name: "Fundamentals of React",
-          exercises: 10,
-          id: 1
-        },
-        {
-          name: "Using props to pass data",
-          exercises: 7,
-          id: 2
-        },
-        {
-          name: "State of a component",
-          exercises: 14,
-          id: 3
-        },
-        {
-          name: "Redux",
-          exercises: 11,
-          id: 4
-        }
-      ]
-    },
-    {
-      name: "Node.js",
-      id: 2,
-      parts: [
-        {
-          name: "Routing",
-          exercises: 3,
-          id: 1
-        },
-        {
-          name: "Middlewares",
-          exercises: 7,
-          id: 2
-        }
-      ]
-    }
-  ];
-  const courseList = courses.map(course => (
-    <Parts key={course.id} course={course} />
-  ));
-
-  return <div>{courseList}</div>;
+  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+  const [newName, setNewName] = useState("");
+  const handlePhoneDetailsChange = event => {
+    setNewName(event.target.value);
+  };
+  const addPersonToList = event => {
+    event.preventDefault();
+    setPersons(persons.concat({ name: newName }));
+    setNewName("");
+  };
+  return (
+    <div>
+      <h2>Phonebook</h2>
+      <form onSubmit={addPersonToList}>
+        <div>
+          name: <input value={newName} onChange={handlePhoneDetailsChange} />
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+      <h2>Numbers</h2>
+      <Numbers personList={persons} />
+    </div>
+  );
 };
 
 export default AppPart1;
