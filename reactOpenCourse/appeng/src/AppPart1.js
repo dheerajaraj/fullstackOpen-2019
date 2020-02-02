@@ -10,8 +10,21 @@ const AppPart1 = () => {
   };
   const addPersonToList = event => {
     event.preventDefault();
-    setPersons(persons.concat({ name: newName }));
+    if (checkDuplicates(newName))
+      alert(`${newName} is already added to phonebook`);
+    else {
+      setPersons(persons.concat({ name: newName }));
+    }
     setNewName("");
+  };
+  const checkDuplicates = personToAdd => {
+    const notSearched = persons.filter(person => person.name === personToAdd);
+    console.log(personToAdd);
+    console.log("notSearched: " + notSearched);
+    if (notSearched.length === 0) return false;
+    else {
+      return true;
+    }
   };
   return (
     <div>
