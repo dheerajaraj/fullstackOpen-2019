@@ -8,6 +8,7 @@ const AppPart1 = () => {
   ]);
   const [newName, setNewName] = useState("");
   const [newPhone, setPhone] = useState("");
+  const [filtered, setFilteredList] = useState([]);
 
   const handleNameDetailsChange = event => {
     setNewName(event.target.value);
@@ -26,6 +27,7 @@ const AppPart1 = () => {
     setNewName("");
     setPhone("");
   };
+
   const checkDuplicates = personToAdd => {
     const notSearched = persons.filter(person => person.name === personToAdd);
     if (notSearched.length === 0) return false;
@@ -34,9 +36,25 @@ const AppPart1 = () => {
     }
   };
 
+  const handleFilter = event => {
+    const filteredList = persons.filter(
+      person => event.target.value === person.name
+    );
+    setFilteredList(filteredList);
+  };
+  const displayFilter = filtered.map((person, index) => (
+    <li key={index}>
+      {person.name} {person.phone}
+    </li>
+  ));
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+        filter shown with: <input onChange={handleFilter} />
+        {displayFilter}
+      </div>
       <form onSubmit={addPersonToList}>
         <div>
           name: <input value={newName} onChange={handleNameDetailsChange} />
