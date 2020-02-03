@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import Parts from "./components/Parts";
 import Numbers from "./components/Numbers";
+import PersonForm from "./components/PersonForm";
+import Filter from "./components/Filter";
 const AppPart1 = () => {
   const [persons, setPersons] = useState([
     { name: "Arto Hellas", phone: "+65 83638035" }
@@ -42,31 +44,20 @@ const AppPart1 = () => {
     );
     setFilteredList(filteredList);
   };
-  const displayFilter = filtered.map((person, index) => (
-    <li key={index}>
-      {person.name} {person.phone}
-    </li>
-  ));
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with: <input onChange={handleFilter} />
-        {displayFilter}
-      </div>
-      <form onSubmit={addPersonToList}>
-        <div>
-          name: <input value={newName} onChange={handleNameDetailsChange} />
-        </div>
-        <div>
-          number: <input value={newPhone} onChange={handlePhoneDetailsChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
+      <Filter handleFilter={handleFilter} filtered={filtered} />
+      <h3>Add a new</h3>
+      <PersonForm
+        handleNameDetailsChange={handleNameDetailsChange}
+        handlePhoneDetailsChange={handlePhoneDetailsChange}
+        addPersonToList={addPersonToList}
+        newName={newName}
+        newPhone={newPhone}
+      />
+      <h3>Numbers</h3>
       <Numbers personList={persons} />
     </div>
   );
