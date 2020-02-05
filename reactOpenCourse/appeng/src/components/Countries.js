@@ -1,12 +1,18 @@
-import React, { Component } from "react";
+import React, { useState, Component } from "react";
 import axios from "axios";
 
 class componentName extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { cid: -1 };
+  }
   render() {
-    const countryList = this.props.countryList.map((country, index) => (
-      <li key={index}>{country.name}</li>
-    ));
-
+    const handleDisplayClick = event => {
+      event.preventDefault();
+      this.setState({
+        cid: event.target.id
+      });
+    };
     const Info = props => {
       return (
         <p>
@@ -20,35 +26,61 @@ class componentName extends Component {
       return <img src={props.url} alt={props.url} width="260" height="200" />;
     };
 
+    const RenderIndividualCountry = props => {
+      return (
+        <div>
+          <h1>{props.name}</h1>
+          <Info text="Capital: " details={props.capital} />
+          <Info text="Population: " details={props.population} />
+          <h1>Languages</h1>
+          {props.languages.map((language, index) => (
+            <li key={index}>{language.nativeName}</li>
+          ))}
+          <RenderFlagPic url={props.url} />
+        </div>
+      );
+    };
+    const renderSelectedCountry =
+      this.state.cid >= 0 && this.state.cid < this.props.countryList.length ? (
+        <RenderIndividualCountry
+          name={this.props.countryList[this.state.cid].name}
+          capital={this.props.countryList[this.state.cid].capital}
+          url={this.props.countryList[this.state.cid].flag}
+          languages={this.props.countryList[this.state.cid].languages}
+          population={this.props.countryList[this.state.cid].population}
+        />
+      ) : (
+        <p></p>
+      );
+
     const FinalRender = () => {
-      if (countryList.length > 10) {
+      if (this.props.countryList.length > 10) {
         return <p>Too many matches specify another filter</p>;
-      } else if (countryList.length === 1) {
+      } else if (this.props.countryList.length === 1) {
         return (
-          <div>
-            <h1>{this.props.countryList[0].name}</h1>
-            <Info
-              text="Capital: "
-              details={this.props.countryList[0].capital}
-            />
-            <Info
-              text="Population: "
-              details={this.props.countryList[0].population}
-            />
-            <h1>Languages</h1>
-            {this.props.countryList[0].languages.map((language, index) => (
-              <li key={index}>{language.nativeName}</li>
-            ))}
-            <RenderFlagPic url={this.props.countryList[0].flag} />
-          </div>
+          <RenderIndividualCountry
+            name={this.props.countryList[0].name}
+            capital={this.props.countryList[0].capital}
+            url={this.props.countryList[0].flag}
+            languages={this.props.countryList[0].languages}
+            population={this.props.countryList[0].population}
+          />
         );
       } else {
-        return countryList;
+        return this.props.countryList.map((country, index) => (
+          <li key={index}>
+            {country.name}{" "}
+            <button onClick={handleDisplayClick} id={index}>
+              show
+            </button>
+          </li>
+        ));
       }
     };
     return (
       <div>
         <FinalRender />
+        {renderSelectedCountry}
       </div>
     );
   }
