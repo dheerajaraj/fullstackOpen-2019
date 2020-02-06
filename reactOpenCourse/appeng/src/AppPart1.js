@@ -9,7 +9,7 @@ const AppPart1 = () => {
 
   const handleCountrySelection = event => {
     setCountrySelection(event.target.value);
-    setTyping(true);
+    setTyping(false);
   };
 
   useEffect(() => {
@@ -17,7 +17,7 @@ const AppPart1 = () => {
       .get("https://restcountries.eu/rest/v2/name/" + countrySelection)
       .then(response => {
         setCountries(response.data);
-        setTyping(false);
+        setTyping(true);
       });
   }, [countrySelection]);
 

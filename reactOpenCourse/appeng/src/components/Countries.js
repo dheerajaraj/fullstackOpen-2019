@@ -40,8 +40,9 @@ class componentName extends Component {
         </div>
       );
     };
-    const renderSelectedCountry =
-      this.state.cid >= 0 && this.state.cid < this.props.countryList.length ? (
+    const RenderSelectedCountry = () => {
+      return this.state.cid >= 0 &&
+        this.state.cid < this.props.countryList.length ? (
         <RenderIndividualCountry
           name={this.props.countryList[this.state.cid].name}
           capital={this.props.countryList[this.state.cid].capital}
@@ -52,6 +53,18 @@ class componentName extends Component {
       ) : (
         <p></p>
       );
+    };
+
+    const List = () => {
+      return this.props.countryList.map((country, index) => (
+        <li key={index}>
+          {country.name}{" "}
+          <button onClick={handleDisplayClick} id={index}>
+            show
+          </button>
+        </li>
+      ));
+    };
 
     const FinalRender = () => {
       if (this.props.countryList.length > 10) {
@@ -66,21 +79,18 @@ class componentName extends Component {
             population={this.props.countryList[0].population}
           />
         );
-      } else {
-        return this.props.countryList.map((country, index) => (
-          <li key={index}>
-            {country.name}{" "}
-            <button onClick={handleDisplayClick} id={index}>
-              show
-            </button>
-          </li>
-        ));
       }
+      return (
+        <div>
+          <List />
+          <RenderSelectedCountry />
+        </div>
+      );
     };
+
     return (
       <div>
         <FinalRender />
-        {renderSelectedCountry}
       </div>
     );
   }
