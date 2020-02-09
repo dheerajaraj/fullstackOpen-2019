@@ -26,7 +26,12 @@ const AppPart1 = () => {
       Query country:
       <input value={countrySelection} onChange={handleCountrySelection} />
       <ul>
-        <Countries countryList={countriesReturned} typing={typing} />
+        <Countries
+          countryList={countriesReturned}
+          typing={typing}
+          setTyping={setTyping}
+          useEffect={useEffect}
+        />
       </ul>
     </div>
   );
