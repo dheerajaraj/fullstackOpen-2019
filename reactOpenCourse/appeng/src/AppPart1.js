@@ -26,8 +26,9 @@ const AppPart1 = () => {
       name: newNameEntry,
       number: newNumberEntry
     };
+
     communicationService
-      .insert()
+      .insert(personEntry)
       .then(newPerson => {
         setPersonList(personList.concat(newPerson));
         setNewNameEntry("");
