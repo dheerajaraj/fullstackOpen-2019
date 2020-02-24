@@ -6,12 +6,7 @@ import communicationService from "./components/CommunicationNotes";
 const AppPart1 = () => {
   const [newNameEntry, setNewNameEntry] = useState("");
   const [newNumberEntry, setNewNumberEntry] = useState("");
-  const [personList, setPersonList] = useState([
-    {
-      name: "",
-      number: ""
-    }
-  ]);
+  const [personList, setPersonList] = useState([]);
   const [selection, setSelection] = useState("");
 
   const handleAddName = event => {
@@ -27,7 +22,7 @@ const AppPart1 = () => {
       number: newNumberEntry
     };
     communicationService
-      .insert()
+      .insert(personEntry)
       .then(newPerson => {
         setPersonList(personList.concat(newPerson));
         setNewNameEntry("");
@@ -42,20 +37,41 @@ const AppPart1 = () => {
     setSelection(event.target.value);
   };
 
-  const PersonDetails = () => {
-    return <div></div>;
+  const handleDeleteEntry = person => {
+    var deleteConfirm = window.confirm("Delete " + person.name + " ?");
+    if (deleteConfirm === true) {
+      communicationService
+        .delete(person.id)
+        .then(setPersonList(personList.filter(entry => entry.id != person.id)))
+        .catch(error => {
+          alert(`the person '${person.name} does not exist'`);
+        });
+    }
   };
+
+  useEffect(() => {
+    communicationService.getAll().then(response => {
+      setPersonList(response.data);
+    });
+  }, []);
+
   const DisplayNumbers = () => {
     return (
       <div>
-        {personList.map((person, index) => (
-          <li key={index}>
-            {person.name} {person.number}
-          </li>
-        ))}
+        <ul>
+          {personList.map((person, index) => (
+            <li key={index}>
+              {person.name} {person.number}{" "}
+              <button id={index} onClick={handleDeleteEntry.bind(this, person)}>
+                Delete
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
     );
   };
+
   return (
     <div>
       <h1>Phonebook</h1>
@@ -74,6 +90,7 @@ const AppPart1 = () => {
           <button type="submit">add</button>
         </div>
       </form>
+      <h2>Numbers</h2>
       <DisplayNumbers />
     </div>
   );
