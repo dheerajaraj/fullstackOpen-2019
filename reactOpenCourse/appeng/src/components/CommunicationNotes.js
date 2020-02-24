@@ -15,8 +15,17 @@ const getAllPeople = () => {
   return axios.get(baseUrl);
 };
 
+const updatePerson = personEntry => {
+  return axios
+    .put(baseUrl + "/" + personEntry.id, personEntry)
+    .then(response => {
+      return response.data;
+    });
+};
+
 export default {
   insert: insertPersonDetails,
   delete: deletePerson,
-  getAll: getAllPeople
+  getAll: getAllPeople,
+  update: updatePerson
 };

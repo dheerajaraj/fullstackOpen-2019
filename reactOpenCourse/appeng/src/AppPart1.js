@@ -21,20 +21,52 @@ const AppPart1 = () => {
       name: newNameEntry,
       number: newNumberEntry
     };
-    communicationService
-      .insert(personEntry)
-      .then(newPerson => {
-        setPersonList(personList.concat(newPerson));
-        setNewNameEntry("");
-        setNewNumberEntry("");
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    var personExists = personList.find(
+      person => person.name === personEntry.name
+    );
+
+    if (personExists != null) {
+      personEntry.id = personExists.id;
+      handleUpdate(personEntry);
+    } else {
+      communicationService
+        .insert(personEntry)
+        .then(newPerson => {
+          setPersonList(personList.concat(newPerson));
+          setNewNameEntry("");
+          setNewNumberEntry("");
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   };
 
   const handleFilter = event => {
     setSelection(event.target.value);
+  };
+
+  const handleUpdate = person => {
+    var updateConfirm = window.confirm(
+      person.name +
+        " is already added to phonebook, replace the old number with a new one?"
+    );
+    if (updateConfirm === true) {
+      communicationService
+        .update(person)
+        .then(response => {
+          setPersonList(
+            personList.map(entry =>
+              entry.id === response.id
+                ? { ...entry, number: response.number }
+                : entry
+            )
+          );
+          setNewNameEntry("");
+          setNewNumberEntry("");
+        })
+        .catch(error => console.log(error));
+    }
   };
 
   const handleDeleteEntry = person => {
