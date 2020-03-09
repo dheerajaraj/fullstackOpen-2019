@@ -3,11 +3,14 @@ import ReactDOM from "react-dom";
 import axios from "axios";
 import Filter from "./components/Filter";
 import communicationService from "./components/CommunicationNotes";
+import "./index.css";
+
 const AppPart1 = () => {
   const [newNameEntry, setNewNameEntry] = useState("");
   const [newNumberEntry, setNewNumberEntry] = useState("");
   const [personList, setPersonList] = useState([]);
   const [selection, setSelection] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleAddName = event => {
     setNewNameEntry(event.target.value);
@@ -36,8 +39,13 @@ const AppPart1 = () => {
           setNewNameEntry("");
           setNewNumberEntry("");
         })
-        .catch(err => {
-          console.log(err);
+        .catch(error => {
+          console.log("Error message is triggered: ");
+          console.log(error.response.data);
+          setErrorMessage(error.response.data.error);
+          setTimeout(() => {
+            setErrorMessage("");
+          }, 5000);
         });
     }
   };
@@ -65,7 +73,7 @@ const AppPart1 = () => {
           setNewNameEntry("");
           setNewNumberEntry("");
         })
-        .catch(error => console.log(error));
+        .catch(err => setErrorMessage(err));
     }
   };
 
@@ -103,10 +111,18 @@ const AppPart1 = () => {
       </div>
     );
   };
-
+  const ErrorMessage = () => {
+    if (errorMessage === "") return <div></div>;
+    return (
+      <div className="error">
+        <p>{errorMessage}</p>
+      </div>
+    );
+  };
   return (
     <div>
       <h1>Phonebook</h1>
+      <ErrorMessage />
       filter shown with{" "}
       <input value={selection} onChange={handleFilter}></input>
       <Filter personList={personList} selection={selection} />
