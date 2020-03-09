@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "/api/notes";
+const baseUrl = "/api/phones";
 
 const insertPersonDetails = personEntry => {
   return axios.post(baseUrl, personEntry).then(response => {
