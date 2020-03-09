@@ -57,8 +57,8 @@ const AppPart1 = () => {
         .then(response => {
           setPersonList(
             personList.map(entry =>
-              entry.id === response.id
-                ? { ...entry, number: response.number }
+              entry.id === person.id
+                ? { ...entry, number: person.number }
                 : entry
             )
           );
