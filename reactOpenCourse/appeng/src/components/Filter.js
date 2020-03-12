@@ -5,9 +5,9 @@ class Filter extends Component {
     return (
       <div>
         {this.props.personList.map((person, index) =>
-          person.name === this.props.selection ? (
+          person.title === this.props.selection ? (
             <li key={index}>
-              {person.name} {person.number}
+              {person.title} {person.author} {person.url} {person.likes}
             </li>
           ) : (
             ""

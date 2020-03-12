@@ -6,14 +6,22 @@ import communicationService from "./components/CommunicationNotes";
 import "./index.css";
 
 const AppPart1 = () => {
-  const [newNameEntry, setNewNameEntry] = useState("");
-  const [newNumberEntry, setNewNumberEntry] = useState("");
+  const [newTitleEntry, setNewTitleEntry] = useState("");
+  const [newAuthorEntry, setNewAuthorEntry] = useState("");
+  const [newURLEntry, setNewURLEntry] = useState("");
+  const [newNumberEntry, setNewNumberEntry] = useState(0);
   const [personList, setPersonList] = useState([]);
   const [selection, setSelection] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleAddName = event => {
-    setNewNameEntry(event.target.value);
+  const handleAddTitle = event => {
+    setNewTitleEntry(event.target.value);
+  };
+  const handleAddAuthor = event => {
+    setNewAuthorEntry(event.target.value);
+  };
+  const handleAddURL = event => {
+    setNewURLEntry(event.target.value);
   };
   const handleAddNumber = event => {
     setNewNumberEntry(event.target.value);
@@ -21,11 +29,13 @@ const AppPart1 = () => {
   const handleAddPerson = event => {
     event.preventDefault();
     const personEntry = {
-      name: newNameEntry,
-      number: newNumberEntry
+      title: newTitleEntry,
+      author: newAuthorEntry,
+      likes: newNumberEntry,
+      url: newURLEntry
     };
     var personExists = personList.find(
-      person => person.name === personEntry.name
+      person => person.title === personEntry.title
     );
 
     if (personExists != null) {
@@ -36,7 +46,9 @@ const AppPart1 = () => {
         .insert(personEntry)
         .then(newPerson => {
           setPersonList(personList.concat(newPerson));
-          setNewNameEntry("");
+          setNewTitleEntry("");
+          setNewAuthorEntry("");
+          setNewURLEntry("");
           setNewNumberEntry("");
         })
         .catch(error => {
@@ -54,23 +66,29 @@ const AppPart1 = () => {
     setSelection(event.target.value);
   };
 
-  const handleUpdate = person => {
+  const handleUpdate = blog => {
     var updateConfirm = window.confirm(
-      person.name +
-        " is already added to phonebook, replace the old number with a new one?"
+      blog.title + " is already added. Do you want to update records?"
     );
     if (updateConfirm === true) {
       communicationService
-        .update(person)
+        .update(blog)
         .then(response => {
           setPersonList(
             personList.map(entry =>
-              entry.id === person.id
-                ? { ...entry, number: person.number }
+              entry.id === blog.id
+                ? {
+                    ...entry,
+                    author: blog.author,
+                    url: blog.url,
+                    likes: blog.likes
+                  }
                 : entry
             )
           );
-          setNewNameEntry("");
+          setNewTitleEntry("");
+          setNewAuthorEntry("");
+          setNewURLEntry("");
           setNewNumberEntry("");
         })
         .catch(err => setErrorMessage(err));
@@ -78,13 +96,13 @@ const AppPart1 = () => {
   };
 
   const handleDeleteEntry = person => {
-    var deleteConfirm = window.confirm("Delete " + person.name + " ?");
+    var deleteConfirm = window.confirm("Delete " + person.title + " ?");
     if (deleteConfirm === true) {
       communicationService
         .delete(person.id)
         .then(setPersonList(personList.filter(entry => entry.id != person.id)))
         .catch(error => {
-          alert(`the person '${person.name} does not exist'`);
+          alert(`the person '${person.title} does not exist'`);
         });
     }
   };
@@ -101,7 +119,7 @@ const AppPart1 = () => {
         <ul>
           {personList.map((person, index) => (
             <li key={index}>
-              {person.name} {person.number}{" "}
+              {person.title} has this many {person.likes} likes{" "}
               <button id={index} onClick={handleDeleteEntry.bind(this, person)}>
                 Delete
               </button>
@@ -129,10 +147,16 @@ const AppPart1 = () => {
       <h2> Add a new</h2>
       <form onSubmit={handleAddPerson}>
         <div>
-          name: <input value={newNameEntry} onChange={handleAddName} />
+          Title: <input value={newTitleEntry} onChange={handleAddTitle} />
         </div>
         <div>
-          number: <input value={newNumberEntry} onChange={handleAddNumber} />
+          Author: <input value={newAuthorEntry} onChange={handleAddAuthor} />
+        </div>
+        <div>
+          URL: <input value={newURLEntry} onChange={handleAddURL} />
+        </div>
+        <div>
+          Likes: <input value={newNumberEntry} onChange={handleAddNumber} />
         </div>
         <div>
           <button type="submit">add</button>
