@@ -18,6 +18,26 @@ const AppPart1 = () => {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
+  useEffect(() => {
+    communicationService.getAll().then(response => {
+      setPersonList(response.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    const loggedUserJson = window.localStorage.getItem("loggedBlogAppUser");
+    if (loggedUserJson) {
+      const user = JSON.parse(loggedUserJson);
+      setUser(user);
+      communicationService.setToken(user.token);
+    }
+  }, []);
+
+  const handleLogout = event => {
+    window.localStorage.removeItem("loggedBlogAppUser");
+    setUser(null);
+  };
+
   const handleAddTitle = event => {
     setNewTitleEntry(event.target.value);
   };
@@ -73,6 +93,7 @@ const AppPart1 = () => {
         username,
         password
       });
+      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
       communicationService.setToken(user.token);
       setUser(user);
       setUsername("");
@@ -130,12 +151,6 @@ const AppPart1 = () => {
     }
   };
 
-  useEffect(() => {
-    communicationService.getAll().then(response => {
-      setPersonList(response.data);
-    });
-  }, []);
-
   const DisplayNumbers = () => {
     return (
       <div>
@@ -165,7 +180,7 @@ const AppPart1 = () => {
     return (
       <form onSubmit={handleLogin}>
         <div>
-          username{" "}
+          username
           <input
             type="text"
             value={username}
@@ -191,6 +206,8 @@ const AppPart1 = () => {
     return (
       <div>
         <ErrorMessage />
+        <p>{user.username} has logged in</p>
+        <input type="button" value="Logout" onClick={handleLogout} />
         filter shown with{" "}
         <input value={selection} onChange={handleFilter}></input>
         <Filter personList={personList} selection={selection} />
