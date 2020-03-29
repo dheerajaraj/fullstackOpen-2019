@@ -180,6 +180,7 @@ const AppPart1 = () => {
     return (
       <form onSubmit={handleLogin}>
         <div>
+          <ErrorMessage />
           username
           <input
             type="text"
