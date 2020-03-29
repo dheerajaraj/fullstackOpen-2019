@@ -4,6 +4,7 @@ import axios from "axios";
 import Filter from "./components/Filter";
 import communicationService from "./components/CommunicationNotes";
 import "./index.css";
+import loginService from "./service/loginService";
 
 const AppPart1 = () => {
   const [newTitleEntry, setNewTitleEntry] = useState("");
@@ -13,6 +14,9 @@ const AppPart1 = () => {
   const [personList, setPersonList] = useState([]);
   const [selection, setSelection] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [user, setUser] = useState(null);
 
   const handleAddTitle = event => {
     setNewTitleEntry(event.target.value);
@@ -59,6 +63,25 @@ const AppPart1 = () => {
             setErrorMessage("");
           }, 5000);
         });
+    }
+  };
+
+  const handleLogin = async event => {
+    event.preventDefault();
+    try {
+      const user = await loginService.login({
+        username,
+        password
+      });
+      communicationService.setToken(user.token);
+      setUser(user);
+      setUsername("");
+      setPassword("");
+    } catch (exception) {
+      setErrorMessage("Wrong credentials");
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
     }
   };
 
@@ -137,33 +160,68 @@ const AppPart1 = () => {
       </div>
     );
   };
+
+  const loginForm = () => {
+    return (
+      <form onSubmit={handleLogin}>
+        <div>
+          username{" "}
+          <input
+            type="text"
+            value={username}
+            name="username"
+            onChange={({ target }) => setUsername(target.value)}
+          />
+        </div>
+        <div>
+          password
+          <input
+            type="password"
+            value={password}
+            name="password"
+            onChange={({ target }) => setPassword(target.value)}
+          />
+        </div>
+        <button type="submit">login</button>
+      </form>
+    );
+  };
+
+  const blogForm = () => {
+    return (
+      <div>
+        <ErrorMessage />
+        filter shown with{" "}
+        <input value={selection} onChange={handleFilter}></input>
+        <Filter personList={personList} selection={selection} />
+        <h2> Add a new</h2>
+        <form onSubmit={handleAddPerson}>
+          <div>
+            Title: <input value={newTitleEntry} onChange={handleAddTitle} />
+          </div>
+          <div>
+            Author: <input value={newAuthorEntry} onChange={handleAddAuthor} />
+          </div>
+          <div>
+            URL: <input value={newURLEntry} onChange={handleAddURL} />
+          </div>
+          <div>
+            Likes: <input value={newNumberEntry} onChange={handleAddNumber} />
+          </div>
+          <div>
+            <button type="submit">add</button>
+          </div>
+        </form>
+        <h2>Numbers</h2>
+        <DisplayNumbers />
+      </div>
+    );
+  };
   return (
     <div>
       <h1>Phonebook</h1>
-      <ErrorMessage />
-      filter shown with{" "}
-      <input value={selection} onChange={handleFilter}></input>
-      <Filter personList={personList} selection={selection} />
-      <h2> Add a new</h2>
-      <form onSubmit={handleAddPerson}>
-        <div>
-          Title: <input value={newTitleEntry} onChange={handleAddTitle} />
-        </div>
-        <div>
-          Author: <input value={newAuthorEntry} onChange={handleAddAuthor} />
-        </div>
-        <div>
-          URL: <input value={newURLEntry} onChange={handleAddURL} />
-        </div>
-        <div>
-          Likes: <input value={newNumberEntry} onChange={handleAddNumber} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <DisplayNumbers />
+      {user === null && loginForm()}
+      {user !== null && blogForm()}
     </div>
   );
 };

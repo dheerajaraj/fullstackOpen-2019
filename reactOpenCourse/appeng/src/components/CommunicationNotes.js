@@ -1,10 +1,18 @@
 import axios from "axios";
 const baseUrl = "/api/blogs";
 
-const insertPersonDetails = personEntry => {
-  return axios.post(baseUrl, personEntry).then(response => {
-    return response.data;
-  });
+let token = null;
+
+const setToken = newToken => {
+  token = `bearer ${newToken}`;
+};
+
+const insertPersonDetails = async personEntry => {
+  const config = {
+    headers: { Authorization: token }
+  };
+  const response = await axios.post(baseUrl, personEntry, config);
+  return response.data;
 };
 
 const deletePerson = id => {
@@ -27,5 +35,6 @@ export default {
   insert: insertPersonDetails,
   delete: deletePerson,
   getAll: getAllPeople,
-  update: updatePerson
+  update: updatePerson,
+  setToken
 };
