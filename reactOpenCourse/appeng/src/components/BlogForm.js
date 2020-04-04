@@ -2,12 +2,14 @@ import React, { useState, useEffect, Component } from "react";
 import communicationService from "./CommunicationNotes";
 import Filter from "./Filter";
 import TogglableButton from "./TogglableButton";
+import ShowHideButton from "./ShowHideButton";
 
 const BlogForm = () => {
   const [newBlog, setNewBlog] = useState({});
   const [personList, setPersonList] = useState([]);
   const [selection, setSelection] = useState("");
   const blogFormRef = React.createRef();
+  const displayBlogDetailsRef = React.createRef();
 
   useEffect(() => {
     communicationService.getAll().then(response => {
@@ -43,7 +45,13 @@ const BlogForm = () => {
       newNumberEntry: target.value
     });
   };
-
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: "solid",
+    borderWidth: 1,
+    marginBottom: 5
+  };
   const handleAddPerson = event => {
     event.preventDefault();
     const blogEntry = {
@@ -114,14 +122,27 @@ const BlogForm = () => {
     }
   };
 
-  const DisplayNumbers = () => {
+  const displayBlogDetails = person => {
     return (
       <div>
+        <p>author: {person.author}</p>
+        <p>url: {person.url}</p>
+        <p>likes: {person.likes}</p>
+      </div>
+    );
+  };
+
+  const DisplayNumbers = () => {
+    return (
+      <div style={blogStyle}>
         <h2>Numbers</h2>
         <ul>
           {personList.map((person, index) => (
             <li key={index}>
-              {person.title} has this many {person.likes} likes{" "}
+              {person.title}{" "}
+              <ShowHideButton buttonLabel="view" ref={displayBlogDetailsRef}>
+                {displayBlogDetails(person)}
+              </ShowHideButton>
               <button id={index} onClick={handleDeleteEntry.bind(this, person)}>
                 Delete
               </button>
@@ -162,6 +183,7 @@ const BlogForm = () => {
           </div>
         </form>
       </TogglableButton>
+
       <DisplayNumbers />
     </div>
   );
