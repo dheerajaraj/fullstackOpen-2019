@@ -5,18 +5,20 @@ import Filter from "./components/Filter";
 import communicationService from "./components/CommunicationNotes";
 import "./index.css";
 import loginService from "./service/loginService";
+import LoginForm from "./components/LoginForm";
+import BlogForm from "./components/BlogForm";
+import TogglableButton from "./components/TogglableButton";
 
 const AppPart1 = () => {
-  const [newTitleEntry, setNewTitleEntry] = useState("");
-  const [newAuthorEntry, setNewAuthorEntry] = useState("");
-  const [newURLEntry, setNewURLEntry] = useState("");
-  const [newNumberEntry, setNewNumberEntry] = useState(0);
+  const [newBlog, setNewBlog] = useState({});
   const [personList, setPersonList] = useState([]);
   const [selection, setSelection] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+  const [loginVisible, setLoginVisible] = useState(false);
+  const blogFormRef = React.createRef();
 
   useEffect(() => {
     communicationService.getAll().then(response => {
@@ -38,53 +40,9 @@ const AppPart1 = () => {
     setUser(null);
   };
 
-  const handleAddTitle = event => {
-    setNewTitleEntry(event.target.value);
-  };
-  const handleAddAuthor = event => {
-    setNewAuthorEntry(event.target.value);
-  };
-  const handleAddURL = event => {
-    setNewURLEntry(event.target.value);
-  };
-  const handleAddNumber = event => {
-    setNewNumberEntry(event.target.value);
-  };
-  const handleAddPerson = event => {
-    event.preventDefault();
-    const personEntry = {
-      title: newTitleEntry,
-      author: newAuthorEntry,
-      likes: newNumberEntry,
-      url: newURLEntry
-    };
-    var personExists = personList.find(
-      person => person.title === personEntry.title
-    );
+  const handleLoginUsername = ({ target }) => setUsername(target.value);
 
-    if (personExists != null) {
-      personEntry.id = personExists.id;
-      handleUpdate(personEntry);
-    } else {
-      communicationService
-        .insert(personEntry)
-        .then(newPerson => {
-          setPersonList(personList.concat(newPerson));
-          setNewTitleEntry("");
-          setNewAuthorEntry("");
-          setNewURLEntry("");
-          setNewNumberEntry("");
-        })
-        .catch(error => {
-          console.log("Error message is triggered: ");
-          console.log(error.response.data);
-          setErrorMessage(error.response.data.error);
-          setTimeout(() => {
-            setErrorMessage("");
-          }, 5000);
-        });
-    }
-  };
+  const handleLoginPassword = ({ target }) => setPassword(target.value);
 
   const handleLogin = async event => {
     event.preventDefault();
@@ -110,6 +68,38 @@ const AppPart1 = () => {
     setSelection(event.target.value);
   };
 
+  const handleAddPerson = event => {
+    event.preventDefault();
+    const blogEntry = {
+      title: newBlog.newTitleEntry,
+      author: newBlog.newAuthorEntry,
+      likes: newBlog.newNumberEntry,
+      url: newBlog.newURLEntry
+    };
+    blogFormRef.current.toggleVisibility();
+    var blogExists = personList.find(blog => blog.title === blogEntry.title);
+
+    if (blogExists != null) {
+      blogEntry.id = blogExists.id;
+      handleUpdate(blogEntry);
+    } else {
+      communicationService
+        .insert(blogEntry)
+        .then(newPerson => {
+          setPersonList(personList.concat(newPerson));
+          setNewBlog({});
+        })
+        .catch(error => {
+          console.log("Error message is triggered: ");
+          console.log(error.response.data);
+          setErrorMessage(error.response.data.error);
+          setTimeout(() => {
+            setErrorMessage("");
+          }, 5000);
+        });
+    }
+  };
+
   const handleUpdate = blog => {
     var updateConfirm = window.confirm(
       blog.title + " is already added. Do you want to update records?"
@@ -130,10 +120,7 @@ const AppPart1 = () => {
                 : entry
             )
           );
-          setNewTitleEntry("");
-          setNewAuthorEntry("");
-          setNewURLEntry("");
-          setNewNumberEntry("");
+          setNewBlog({});
         })
         .catch(err => setErrorMessage(err));
     }
@@ -154,6 +141,7 @@ const AppPart1 = () => {
   const DisplayNumbers = () => {
     return (
       <div>
+        <h2>Numbers</h2>
         <ul>
           {personList.map((person, index) => (
             <li key={index}>
@@ -176,70 +164,57 @@ const AppPart1 = () => {
     );
   };
 
-  const loginForm = () => {
-    return (
-      <form onSubmit={handleLogin}>
-        <div>
-          <ErrorMessage />
-          username
-          <input
-            type="text"
-            value={username}
-            name="username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          password
-          <input
-            type="password"
-            value={password}
-            name="password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">login</button>
-      </form>
-    );
-  };
-
   const blogForm = () => {
     return (
       <div>
-        <ErrorMessage />
-        <p>{user.username} has logged in</p>
-        <input type="button" value="Logout" onClick={handleLogout} />
-        filter shown with{" "}
-        <input value={selection} onChange={handleFilter}></input>
-        <Filter personList={personList} selection={selection} />
-        <h2> Add a new</h2>
-        <form onSubmit={handleAddPerson}>
-          <div>
-            Title: <input value={newTitleEntry} onChange={handleAddTitle} />
-          </div>
-          <div>
-            Author: <input value={newAuthorEntry} onChange={handleAddAuthor} />
-          </div>
-          <div>
-            URL: <input value={newURLEntry} onChange={handleAddURL} />
-          </div>
-          <div>
-            Likes: <input value={newNumberEntry} onChange={handleAddNumber} />
-          </div>
-          <div>
-            <button type="submit">add</button>
-          </div>
-        </form>
-        <h2>Numbers</h2>
+        <p>
+          {user.username} has logged in{" "}
+          <input type="button" value="Logout" onClick={handleLogout} />
+        </p>
+        <br />
+        <TogglableButton buttonLabel="create note" ref={blogFormRef}>
+          <BlogForm
+            errorMessage={ErrorMessage}
+            username={username}
+            newBlog={newBlog}
+            setNewBlog={setNewBlog}
+            handleAddPerson={handleAddPerson}
+          />
+        </TogglableButton>
+        <br />
+        <Filter
+          personList={personList}
+          selection={selection}
+          handleFilter={handleFilter}
+        />
         <DisplayNumbers />
       </div>
     );
   };
+
+  const mainForm = () => {
+    if (user === null) {
+      return (
+        <div>
+          <LoginForm
+            handleLoginUsername={handleLoginUsername}
+            handleLoginPassword={handleLoginPassword}
+            handleLogin={handleLogin}
+            username={username}
+            password={password}
+          />
+        </div>
+      );
+    } else {
+      return <div>{blogForm()}</div>;
+    }
+  };
+
   return (
     <div>
       <h1>Phonebook</h1>
-      {user === null && loginForm()}
-      {user !== null && blogForm()}
+      <ErrorMessage />
+      {mainForm()}
     </div>
   );
 };
