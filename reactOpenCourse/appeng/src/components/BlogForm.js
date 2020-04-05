@@ -84,7 +84,12 @@ const BlogForm = () => {
     }
   };
 
-  const handleUpdate = blog => {
+  const handleUpdate = (blog, updateLikes) => {
+    if (updateLikes) {
+      blog.likes = blog.likes + 1;
+    }
+    console.log("Blogs: ");
+    console.log(JSON.stringify(blog));
     var updateConfirm = window.confirm(
       blog.title + " is already added. Do you want to update records?"
     );
@@ -127,7 +132,10 @@ const BlogForm = () => {
       <div>
         <p>author: {person.author}</p>
         <p>url: {person.url}</p>
-        <p>likes: {person.likes}</p>
+        <p>
+          likes: {person.likes} &nbsp{" "}
+          <button onClick={handleUpdate.bind(this, person, true)}>like</button>
+        </p>
       </div>
     );
   };

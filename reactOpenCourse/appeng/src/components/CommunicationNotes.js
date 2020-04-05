@@ -24,8 +24,11 @@ const getAllPeople = () => {
 };
 
 const updatePerson = personEntry => {
+  const config = {
+    headers: { Authorization: token }
+  };
   return axios
-    .put(baseUrl + "/" + personEntry.id, personEntry)
+    .put(baseUrl + "/" + personEntry.id, personEntry, config)
     .then(response => {
       return response.data;
     });
