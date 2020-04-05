@@ -11,9 +11,22 @@ const BlogForm = () => {
   const blogFormRef = React.createRef();
   const displayBlogDetailsRef = React.createRef();
 
+  const sortCompare = (a, b) => {
+    const totalLikesA = a.likes;
+    const totalLikesB = b.likes;
+
+    if (totalLikesA > totalLikesB) {
+      return -1;
+    } else if (totalLikesA < totalLikesB) {
+      return 1;
+    } else {
+      return 0;
+    }
+  };
+
   useEffect(() => {
     communicationService.getAll().then(response => {
-      setPersonList(response.data);
+      setPersonList(response.data.sort(sortCompare));
     });
   }, []);
 
