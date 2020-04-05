@@ -101,8 +101,6 @@ const BlogForm = () => {
     if (updateLikes) {
       blog.likes = blog.likes + 1;
     }
-    console.log("Blogs: ");
-    console.log(JSON.stringify(blog));
     var updateConfirm = window.confirm(
       blog.title + " is already added. Do you want to update records?"
     );

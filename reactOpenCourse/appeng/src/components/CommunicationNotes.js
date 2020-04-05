@@ -16,7 +16,10 @@ const insertPersonDetails = async personEntry => {
 };
 
 const deletePerson = id => {
-  return axios.delete(baseUrl + "/" + id);
+  const config = {
+    headers: { Authorization: token }
+  };
+  return axios.delete(baseUrl + "/" + id, config);
 };
 
 const getAllPeople = () => {
